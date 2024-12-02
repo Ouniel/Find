@@ -98,5 +98,5 @@ file-finder -keyword flag -log
 ## 开发环境
 
 - Go 1.20 或更高版本
-- 支持 Windows/Linux/macOS
+- 支持 Windows/Linux
 
