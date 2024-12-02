@@ -100,10 +100,3 @@ file-finder -keyword flag -log
 - Go 1.20 或更高版本
 - 支持 Windows/Linux/macOS
 
-## 许可证
-
-[MIT License](LICENSE)
-
-## 作者
-
-[Your Name](https://github.com/yourusername)
