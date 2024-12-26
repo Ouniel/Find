@@ -109,6 +109,13 @@ const usage = `文件查找工具 (File Finder)
   3. 全局搜索时会遍历所有目录，包括系统目录
   4. 建议使用 -types 和 -size 选项限制搜索范围
   5. 搜索结果包含文件路径、大小、修改时间、权限和内容
+
+	Flag Encodings:
+	UTF-8: flag
+	Unicode: \u0066\u006c\u0061\u0067
+	Base64: ZmxhZw==
+	Hex: 66 6c 61 67
+	Binary: 01100110 01101100 01100001 01100111
 `
 
 // 获取 Windows 系统的所有驱动器
