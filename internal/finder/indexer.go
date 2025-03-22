@@ -184,11 +184,21 @@ func (idx *Indexer) Search(keyword string, config *SearchConfig) (map[string]Fil
 		}
 
 		for _, path := range paths {
-			// 使用索引中的信息而不是重新获取
-			if fileIndex, ok := idx.fileIndices[path]; ok && !fileIndex.IsDir {
+			// 使用索引中的信息
+			if fileIndex, ok := idx.fileIndices[path]; ok {
 				// 验证文件是否仍然存在
 				info, err := os.Stat(path)
 				if err != nil {
+					continue
+				}
+
+				// 如果是目录且不包括目录，则跳过
+				if info.IsDir() && !config.IncludeDir {
+					continue
+				}
+
+				// 应用配置中的搜索限制
+				if shouldSkipFile(path, info, config) {
 					continue
 				}
 

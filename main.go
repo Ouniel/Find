@@ -145,7 +145,7 @@ func executeSearchForPath(keyword *string, permType *string, timeLimit *string, 
 	}
 
 	if *permType != "" {
-		files, err := finder.FindFilesByPermission(*permType)
+		files, err := finder.FindFilesByPermission(*permType, config)
 		if err != nil {
 			return nil, fmt.Errorf("查找权限文件出错: %v", err)
 		}
@@ -169,7 +169,7 @@ func executeSearchForPath(keyword *string, permType *string, timeLimit *string, 
 		if err != nil {
 			return nil, fmt.Errorf("时间格式错误: %v", err)
 		}
-		files, err := finder.FindModifiedFiles(limitTime)
+		files, err := finder.FindModifiedFiles(limitTime, config)
 		if err != nil {
 			return nil, fmt.Errorf("查找修改文件出错: %v", err)
 		}
