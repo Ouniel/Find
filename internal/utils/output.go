@@ -439,7 +439,7 @@ func PrintBanner() {
     ██║     ██║██║ ╚████║██████╔╝███████╗██║  ██║
     ╚═╝     ╚═╝╚═╝  ╚═══╝╚═════╝ ╚══════╝╚═╝  ╚═╝
                                                   
-                      v1.0.0 - File Finder Tool
+                      v2.1 - File Finder Tool
 `
 	fmt.Println(ColorCyan + banner + ColorReset)
 }
