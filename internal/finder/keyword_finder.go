@@ -34,7 +34,8 @@ func FindFilesByKeyword(keyword string, config *SearchConfig) (map[string]FileIn
 
 // findByContentOnly 仅搜索文件内容
 func findByContentOnly(keyword string, config *SearchConfig) (map[string]FileInfo, error) {
-	results := make(map[string]FileInfo)
+	// 收集所有待搜索的文件路径
+	var filePaths []string
 	textParser := parser.NewTextParser(config.MaxContentSize)
 
 	err := filepath.Walk(config.StartDir, func(path string, info os.FileInfo, err error) error {
@@ -66,16 +67,29 @@ func findByContentOnly(keyword string, config *SearchConfig) (map[string]FileInf
 			return nil
 		}
 
-		// 搜索文件内容
+		// 收集文件路径
+		filePaths = append(filePaths, path)
+		return nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	// 根据配置选择并发或串行搜索
+	if config.Concurrent {
+		return searchFileContentConcurrent(filePaths, keyword, config), nil
+	}
+
+	// 串行搜索
+	results := make(map[string]FileInfo)
+	for _, path := range filePaths {
 		fileInfo, found := searchFileContent(path, keyword, config, textParser)
 		if found {
 			results[path] = fileInfo
 		}
-
-		return nil
-	})
-
-	return results, err
+	}
+	return results, nil
 }
 
 // findByBoth 同时搜索文件名和内容

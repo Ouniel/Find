@@ -3,7 +3,7 @@ package finder
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -36,7 +36,7 @@ func FindFilesWithFlag(pattern string, config *SearchConfig) (map[string]FileInf
 			return nil
 		}
 
-		if !info.IsDir() && strings.Contains(strings.ToLower(info.Name()), "flag") {
+		if !info.IsDir() && strings.Contains(strings.ToLower(info.Name()), strings.ToLower(pattern)) {
 			fileInfo, err := GetFileInfo(path, info, config)
 			if err != nil {
 				return nil
@@ -64,7 +64,7 @@ func findFilesWithFlagConcurrent(pattern string, config *SearchConfig) (map[stri
 					continue
 				}
 
-				if strings.Contains(strings.ToLower(info.Name()), "flag") {
+				if strings.Contains(strings.ToLower(info.Name()), strings.ToLower(pattern)) {
 					fileInfo, err := GetFileInfo(path, info, config)
 					if err != nil {
 						continue
@@ -105,7 +105,7 @@ func findFilesWithFlagConcurrent(pattern string, config *SearchConfig) (map[stri
 func GetFileInfo(path string, info os.FileInfo, config *SearchConfig) (FileInfo, error) {
 	content := ""
 	if config.SizeLimit == -1 || info.Size() <= config.SizeLimit {
-		data, err := ioutil.ReadFile(path)
+		data, err := os.ReadFile(path)
 		if err != nil {
 			return FileInfo{}, err
 		}
@@ -151,14 +151,14 @@ func isBinary(data []byte) bool {
 func tryDecode(data []byte) string {
 	// 尝试 GBK
 	if reader := transform.NewReader(bytes.NewReader(data), simplifiedchinese.GBK.NewDecoder()); reader != nil {
-		if decoded, err := ioutil.ReadAll(reader); err == nil {
+		if decoded, err := io.ReadAll(reader); err == nil {
 			return string(decoded)
 		}
 	}
 
 	// 尝试 GB18030
 	if reader := transform.NewReader(bytes.NewReader(data), simplifiedchinese.GB18030.NewDecoder()); reader != nil {
-		if decoded, err := ioutil.ReadAll(reader); err == nil {
+		if decoded, err := io.ReadAll(reader); err == nil {
 			return string(decoded)
 		}
 	}

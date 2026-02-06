@@ -29,6 +29,9 @@ type SearchConfig struct {
 	ContextLines   int    // 上下文行数
 	MaxContentSize int64  // 最大内容搜索文件大小
 	CaseSensitive  bool   // 是否区分大小写
+	// 新增输出配置
+	OutputPath   string // 输出文件路径
+	OutputFormat string // 输出格式：txt, json, csv
 }
 
 func NewDefaultConfig() *SearchConfig {

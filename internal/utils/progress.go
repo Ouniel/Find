@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"path/filepath"
 	"sync/atomic"
+	"time"
 )
 
 type ProgressBar struct {
@@ -20,13 +21,13 @@ func NewProgressBar(width int) *ProgressBar {
 func (p *ProgressBar) SetCurrentDir(dir string) {
 	volume := filepath.VolumeName(dir)
 	if volume != "" && volume != p.lastDir {
-		fmt.Printf("正在构建 %s 的文件索引...\n", volume)
+		fmt.Printf("[%s] [*] 正在构建 %s 的文件索引...\n", time.Now().Format("2006-01-02 15:04:05"), volume)
 		p.lastDir = volume
 	}
 }
 
 func (p *ProgressBar) Start() {
-	fmt.Println("开始构建文件索引...")
+	fmt.Printf("[%s] [*] 开始构建文件索引...\n", time.Now().Format("2006-01-02 15:04:05"))
 }
 
 func (p *ProgressBar) Increment() {
@@ -39,6 +40,6 @@ func (p *ProgressBar) SetTotal(total int64) {
 
 func (p *ProgressBar) Stop(completed bool) {
 	if completed {
-		fmt.Println("索引构建完成")
+		fmt.Printf("[%s] [+] 索引构建完成\n", time.Now().Format("2006-01-02 15:04:05"))
 	}
 }

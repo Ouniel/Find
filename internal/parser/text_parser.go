@@ -11,6 +11,7 @@ import (
 
 	"golang.org/x/text/encoding"
 	"golang.org/x/text/encoding/charmap"
+	"golang.org/x/text/encoding/simplifiedchinese"
 	"golang.org/x/text/encoding/unicode"
 	"golang.org/x/text/transform"
 )
@@ -117,7 +118,21 @@ func (p *TextParser) detectAndConvertEncoding(data []byte) (string, error) {
 		return string(data), nil
 	}
 
-	// 尝试常见编码
+	// 尝试中文编码（GBK、GB18030）
+	chineseEncodings := []encoding.Encoding{
+		simplifiedchinese.GBK,
+		simplifiedchinese.GB18030,
+	}
+
+	for _, enc := range chineseEncodings {
+		decoder := enc.NewDecoder()
+		result, err := decoder.Bytes(data)
+		if err == nil && utf8.Valid(result) {
+			return string(result), nil
+		}
+	}
+
+	// 尝试其他常见编码
 	encodings := []encoding.Encoding{
 		unicode.UTF16(unicode.LittleEndian, unicode.UseBOM),
 		unicode.UTF16(unicode.BigEndian, unicode.UseBOM),

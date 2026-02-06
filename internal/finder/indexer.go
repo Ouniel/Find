@@ -220,6 +220,7 @@ func (idx *Indexer) Search(keyword string, config *SearchConfig) (map[string]Fil
 				if err != nil {
 					continue
 				}
+				fileInfo.MatchType = "filename"
 				results[path] = fileInfo
 			}
 		}
